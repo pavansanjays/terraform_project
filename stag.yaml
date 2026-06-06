@@ -36,7 +36,7 @@ phases:
 
   build:
     commands:
-
+      - cd terraform-files/aws-vpc
       - terraform init -input=false -backend-config=stag.conf
       #here input is false means we are telling to teraform to stop asking qustionslike  yes or no
       - terraform validate
