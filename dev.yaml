@@ -41,9 +41,13 @@ phases:
       #here input is false means we are telling to teraform to stop asking qustionslike  yes or no
       - terraform validate
 
-      - terraform plan -lock=false -input=false -var-file=dev.tfvars
+      # - terraform plan -lock=false -input=false -var-file=dev.tfvars
+      - terraform plan -lock=false -input=false
 
-      - terraform ${TF_COMMAND} -auto-approve -input=false -var-file=dev.tfvars
+      # - terraform ${TF_COMMAND} -auto-approve -input=false -var-file=dev.tfvars
+      - terraform ${TF_COMMAND} -auto-approve -input=false
+
+      #acatally in pla, apply we have to give dev.tfvars but didn't write any thing in those files so just give mornal here
 
   post_build:
     commands:
