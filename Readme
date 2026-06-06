@@ -1,1 +1,3 @@
 This is project related aws-infra.
+
+//built s3 and dynamo db maunlly before deplying code in aws

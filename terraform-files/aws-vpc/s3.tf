@@ -1,90 +1,90 @@
-//create s3 bucket
-resource "aws_s3_bucket" "website" {
-  bucket="hr-terraform-state-demo-12345"
-  force_destroy=true                                                                                                                                
+# //create s3 bucket
+# resource "aws_s3_bucket" "website" {
+#   bucket="hr-terraform-state-demo-12345"
+#   force_destroy=true                                                                                                                                
 
-  tags = {
-    Name="Terraform State Bucket"
-  }
-}
-
-//website config
-resource "aws_s3_bucket_website_configuration" "website" {
-
-  bucket = aws_s3_bucket.website.id
-
-  index_document {
-    suffix = "index.html"
-  }
-} // this enables http://bucket.s3-website-region.amazonaws.com
-
-//access control but this is old, we have to start new i.e bucket policy
-# resource "aws_s3_bucket_acl" "acl" {
-
-#   bucket = aws_s3_bucket.website.id
-#   acl    = "public-read"
+#   tags = {
+#     Name="Terraform State Bucket"
+#   }
 # }
 
-# //bukcet polcies used  instead of acl
-# resource "aws_s3_bucket_policy" "website_policy" {
+# //website config
+# resource "aws_s3_bucket_website_configuration" "website" {
 
 #   bucket = aws_s3_bucket.website.id
 
-#   policy = jsonencode({
+#   index_document {
+#     suffix = "index.html"
+#   }
+# } // this enables http://bucket.s3-website-region.amazonaws.com
 
-#     Version = "2012-10-17"
+# //access control but this is old, we have to start new i.e bucket policy
+# # resource "aws_s3_bucket_acl" "acl" {
 
-#     Statement = [
-#       {
-#         Sid    = "PublicReadGetObject"
+# #   bucket = aws_s3_bucket.website.id
+# #   acl    = "public-read"
+# # }
 
-#         Effect = "Allow"
+# # //bukcet polcies used  instead of acl
+# # resource "aws_s3_bucket_policy" "website_policy" {
 
-#         Principal = "*"
+# #   bucket = aws_s3_bucket.website.id
 
-#         Action = [
-#           "s3:GetObject"
-#         ]
+# #   policy = jsonencode({
 
-#         Resource = [
-#           "${aws_s3_bucket.website.arn}/*"
-#         ]
-#       }
-#     ]
-#   })
-# }  //it makes bucket as public, but aws wants bucket as private. so make it as comment so it is private now
+# #     Version = "2012-10-17"
 
-//enable versioning 
-resource "aws_s3_bucket_versioning" "versioning" {
+# #     Statement = [
+# #       {
+# #         Sid    = "PublicReadGetObject"
 
-  bucket = aws_s3_bucket.website.id
+# #         Effect = "Allow"
 
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
+# #         Principal = "*"
 
-//ownership
+# #         Action = [
+# #           "s3:GetObject"
+# #         ]
 
-resource "aws_s3_bucket_ownership_controls" "ownership" {
+# #         Resource = [
+# #           "${aws_s3_bucket.website.arn}/*"
+# #         ]
+# #       }
+# #     ]
+# #   })
+# # }  //it makes bucket as public, but aws wants bucket as private. so make it as comment so it is private now
 
-  bucket = aws_s3_bucket.website.id
+# //enable versioning 
+# resource "aws_s3_bucket_versioning" "versioning" {
 
-  rule {
-    object_ownership = "BucketOwnerPreferred"
-  }
-}
+#   bucket = aws_s3_bucket.website.id
 
-//control public access
-resource "aws_s3_bucket_public_access_block" "block" {
+#   versioning_configuration {
+#     status = "Enabled"
+#   }
+# }
 
-  bucket = "hr-terraform-state-demo-12345"
+# //ownership
 
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
+# resource "aws_s3_bucket_ownership_controls" "ownership" {
+
+#   bucket = aws_s3_bucket.website.id
+
+#   rule {
+#     object_ownership = "BucketOwnerPreferred"
+#   }
+# }
+
+# //control public access
+# resource "aws_s3_bucket_public_access_block" "block" {
+
+#   bucket = "hr-terraform-state-demo-12345"
+
+#   block_public_acls       = true
+#   block_public_policy     = true
+#   ignore_public_acls      = true
+#   restrict_public_buckets = true
+# }
 
 
 
