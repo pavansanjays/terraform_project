@@ -1,0 +1,1 @@
+//this is used to put dynamic values for all proect in stag environment

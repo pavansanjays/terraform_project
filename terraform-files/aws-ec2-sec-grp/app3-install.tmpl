@@ -1,0 +1,21 @@
+#!/bin/bash
+yum update -y
+
+# Install Java
+amazon-linux-extras enable java-openjdk11
+yum install -y java-11-openjdk wget
+
+cd /home/ec2-user
+
+# Download WAR file
+wget https://github.com/stacksimplify/temp1/releases/download/1.0.0/usermgmt-webapp.war
+
+# Set DB environment variables (Terraform will replace endpoint)
+export DB_HOSTNAME=${rds_db_endpoint}
+export DB_PORT=3306
+export DB_NAME=credintials
+export DB_USERNAME=pavan
+export DB_PASSWORD=218W1A1275VR
+
+# Run application
+java -jar usermgmt-webapp.war > app.log 2>&1 &

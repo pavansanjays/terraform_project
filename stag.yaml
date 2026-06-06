@@ -1,0 +1,50 @@
+version: 0.2
+
+env:
+
+  variables:
+    TERRAFORM_VERSION: "1.9.0"
+    TF_COMMAND: "apply"
+
+  parameter-store:
+    AWS_ACCESS_KEY_ID: "/codebuilt/AWS_ACCESS_KEY_ID"
+    AWS_SECRET_ACCESS_KEY: "/codebuilt/AWS_SECRET_ACCESS_KEY"
+
+phases:
+
+  install:
+    runtime-versions:
+      python: 3.11
+
+    commands:
+      - echo "Installing Terraform"
+
+      - wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+
+      - unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+
+      - mv terraform /usr/local/bin/
+      #here movig to that folder means Move terraform executable into system PATH
+
+      - terraform -version
+
+  pre_build:
+    commands:
+      - echo "Terraform execution started on $(date)"
+
+      - echo "Terraform command is ${TF_COMMAND}"
+
+  build:
+    commands:
+
+      - terraform init -input=false -backend-config=stag.conf
+      #here input is false means we are telling to teraform to stop asking qustionslike  yes or no
+      - terraform validate
+
+      - terraform plan -lock=false -input=false -var-file=stag.tfvars
+
+      - terraform ${TF_COMMAND} -auto-approve -input=false -var-file=stag.tfvars
+
+  post_build:
+    commands:
+      - echo "Completed Terraform execution"
